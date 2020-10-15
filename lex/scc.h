@@ -63,6 +63,10 @@ enum e_TokenCode
     TK_IDENT
 };
 
+extern char* filename;
+extern int line_num;
+extern int token;
+
 typedef struct TkWord
 {
     int tkcode;   //单词编码
@@ -71,6 +75,8 @@ typedef struct TkWord
     struct Symbol* sym_struct;   //指向单词表所表示的结构定义
     struct Symbol* sym_identifier;   //指向单词所表示的标识符
 }TkWord;
+
+extern FILE* fin;
 
 /**
  * elf_hash - 计算哈希地址

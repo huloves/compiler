@@ -1,10 +1,21 @@
 #include "lex.h"
+#include "scc.h"
 #include "dynarray.h"
-#include "string.h"
+#include "dynstring.h"
+#include <string.h>
 
 TkWord* tk_hashtable[MAXKEY];   //哈希表容量
-DynArray tktable;   //单词表
 int token;
+DynString sourcestr;
+char ch;
+
+/**
+ * getch - 从文件中读取一个字节
+ * **/
+void getch()
+{
+    ch = getc(fin);
+}
 
 /**
  * tkwork_direct_insert - 运算符、关键字、常亮直接放入单词表
@@ -61,7 +72,10 @@ TkWord* tkword_insert(char* p)
         for(end = p + length; p < end;) {
             *s++ = *p++;
         }
-        *s = (char*)'\0';
+        *s = (char)'\0';
+
+        tp->sym_identifier = NULL;
+        tp->sym_struct = NULL;
     }
     return tp;
 }
@@ -126,4 +140,108 @@ void init_lex()
     for(tp = &keywords[0]; tp->spelling != NULL; tp++) {
         tkword_direct_insert(tp);
     }
+}
+
+/**
+ * skip_white_space - 忽略空格
+ * **/
+void skip_white_space()
+{
+    while(ch == ' ' || ch == '\t' || ch == '\r') {
+        if(ch == '\r') {
+            getch();
+            if(ch != '\n') {
+                return;
+            }
+            line_num++;
+        }
+        printf("%c", ch);
+        getch();
+    }
+}
+
+/**
+ * parse_comment - 解析注释
+ * **/
+void parse_comment()
+{
+    getch();
+    do {
+        do {
+            if(ch == '\n' || ch == '*' || ch == TK_EOF) {
+                break;
+            } else {
+                getch();
+            }
+        } while(1);
+        if(ch == '\n') {
+            line_num++;
+            getch();
+        } else if(ch == '*') {
+            getch();
+            if(ch == '/') {
+                getch();
+                return;
+            }
+        } else {
+            perror("一直到文件尾未发现配对的注释结束符");
+            return;
+        }
+    } while(1);
+}
+
+/**
+ * preprocess - 预处理，忽略空白字符及注释
+ * **/
+void preprocess()
+{
+    while(1) {
+        if(ch == ' ' || ch == '\t' || ch == '\r') {
+            skip_white_space();
+        } else if(ch == '/') {
+            getch();
+            if(ch == '*') {
+                parse_comment();
+            } else {
+                ungetc(ch, fin);   //把一个字符退回到输入流中
+                ch = '/';
+                break;
+            }
+        } else {
+            break;
+        }
+    }
+}
+
+/**
+ * get_token - 取单词
+ * **/
+void get_token()
+{
+    preprocess();
+}
+
+/**
+ * get_tkstr - 取得单词v所代表的源码字符串，错误提示用
+ * @v: 单词编号
+ **/
+char *get_tkstr(int v)
+{
+	if(v > tktable.count)
+		return NULL;
+	else if(v >= TK_CINT && v <= TK_CSTR)
+		return sourcestr.data;
+	else
+		return ((TkWord*)tktable.data[v])->spelling;
+}
+
+/**
+ * lex - 词法分析
+ * **/
+void lex()
+{
+    do {
+        get_token();   //取单词
+    } while(token != TK_EOF);
+    printf("\ncode row = %d\n", line_num);
 }

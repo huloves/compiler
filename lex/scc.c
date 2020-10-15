@@ -1,4 +1,12 @@
 #include "scc.h"
+#include "lex.h"
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+FILE* fin;
+char* filename;
+char* outfile;
 
 /**
  * elf_hash - 计算哈希地址
@@ -31,4 +39,30 @@ void *mallocz(int size)
         perror("内存分配失败");
     memset(ptr, 0, size);
     return ptr;
+}
+
+/**
+ * init - 初始化
+ * **/
+void init()
+{
+    line_num = 1;
+    init_lex();
+}
+
+/**
+ * main - 主函数
+ * **/
+int main(int argc, char** argv)
+{
+    fin = fopen(argv[1], "rb");
+    if(!fin) {
+        printf("can't open source file: %s\n", argv[1]);
+        return 0;
+    }
+    init();   //初始化单词表
+    getch();
+    fclose(fin);
+    printf("finish!\n");
+    return 1;
 }

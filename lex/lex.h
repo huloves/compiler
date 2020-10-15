@@ -2,6 +2,9 @@
 #define __LEX_LEX_H
 
 #include "scc.h"
+#include "dynarray.h"
+
+extern DynArray tktable;			// 单词动态数组
 
 /**
  * tkwork_direct_insert - 运算符、关键字、常亮直接放入单词表
@@ -19,5 +22,16 @@ TkWord* tkword_find(char* p, int keyno);
  * tkword_insert - 标识符插入单词表，先查找，查不到再插入单词表
  * **/
 TkWord* tkword_insert(char* p);
+
+/**
+ * get_tkstr - 取得单词v所代表的源码字符串，错误提示用
+ * @v: 单词编号
+ **/
+char *get_tkstr(int v);
+
+/**
+ * getch - 从文件中读取一个字节
+ * **/
+void getch();
 
 #endif
