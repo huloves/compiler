@@ -76,4 +76,6 @@ typedef struct DynArray
     void** data;   //指向数据指针数组
 }DynArray;
 
+#define MAXKEY	1024   //哈希表容量
+
 #endif
