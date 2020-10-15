@@ -15,5 +15,9 @@ TkWord* tkword_direct_insert(TkWord* tp);
  * **/
 TkWord* tkword_find(char* p, int keyno);
 
+/**
+ * tkword_insert - 标识符插入单词表，先查找，查不到再插入单词表
+ * **/
+TkWord* tkword_insert(char* p);
 
 #endif
