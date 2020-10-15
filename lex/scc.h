@@ -85,4 +85,9 @@ int elf_hash(char* key);
  **/
 void *mallocz(int size);
 
+/**
+ * init_lex - 词法分析初始化
+ * **/
+void init_lex();
+
 #endif
