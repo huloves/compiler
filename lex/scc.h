@@ -3,6 +3,9 @@
 
 #include <stdio.h>
 
+#define STR_INIT_SIZE 8
+#define MAXKEY 1024
+
 //单词编码
 enum e_TokenCode
 {
@@ -69,6 +72,17 @@ typedef struct TkWord
     struct Symbol* sym_identifier;   //指向单词所表示的标识符
 }TkWord;
 
-#define MAXKEY	1024   //哈希表容量
+/**
+ * elf_hash - 计算哈希地址
+ * @key - 哈希关键字
+ * @MAXKEY - 哈希表长度
+ * **/
+int elf_hash(char* key);
+
+/**
+ * mallocz - 分配堆内存并将数据初始化为'0'
+ * @size - 分配内存大小
+ **/
+void *mallocz(int size);
 
 #endif

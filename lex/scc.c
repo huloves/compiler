@@ -18,3 +18,17 @@ int elf_hash(char* key)
     }
     return h % MAXKEY;
 }
+
+/**
+ * mallocz - 分配堆内存并将数据初始化为'0'
+ * @size - 分配内存大小
+ **/
+void *mallocz(int size)
+{
+    void *ptr;
+	ptr = malloc(size);
+	if (!ptr && size)
+        perror("内存分配失败");
+    memset(ptr, 0, size);
+    return ptr;
+}
