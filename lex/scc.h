@@ -60,21 +60,14 @@ enum e_TokenCode
     TK_IDENT
 };
 
-/* 动态字符串 */
-typedef struct DynString
+typedef struct TkWord
 {
-    int count;
-    int capacity;   //包含该字符串的缓冲的缓冲区长度
-    char* data;   //指向字符串的指针
-}DynString;
-
-/* 动态数组 */
-typedef struct DynArray
-{
-    int count;
-    int capacity;
-    void** data;   //指向数据指针数组
-}DynArray;
+    int tkcode;   //单词编码
+    struct TkWord* next;   //指向哈希冲突的同义词
+    char* spelling;   //单词字符串
+    struct Symbol* sym_struct;   //指向单词表所表示的结构定义
+    struct Symbol* sym_identifier;   //指向单词所表示的标识符
+}TkWord;
 
 #define MAXKEY	1024   //哈希表容量
 
