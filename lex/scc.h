@@ -60,11 +60,20 @@ enum e_TokenCode
     TK_IDENT
 };
 
+/* 动态字符串 */
 typedef struct DynString
 {
     int count;
     int capacity;   //包含该字符串的缓冲的缓冲区长度
     char* data;   //指向字符串的指针
 }DynString;
+
+/* 动态数组 */
+typedef struct DynArray
+{
+    int count;
+    int capacity;
+    void** data;   //指向数据指针数组
+}DynArray;
 
 #endif
