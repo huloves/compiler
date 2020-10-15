@@ -1,4 +1,4 @@
-#include "scc.h"
+#include "dynstring.h"
 #include <stdlib.h>
 
 #define STR_INIT_SIZE 8

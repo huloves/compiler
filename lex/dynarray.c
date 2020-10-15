@@ -1,4 +1,4 @@
-#include "scc.h"
+#include "dynarray.h"
 #include <stdlib.h>
 
 /**

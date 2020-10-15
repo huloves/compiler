@@ -3,6 +3,8 @@
 
 #include "scc.h"
 
+#define STR_INIT_SIZE 8   //初始化字符串大小
+
 /* 动态字符串 */
 typedef struct DynString
 {
