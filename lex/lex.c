@@ -23,6 +23,7 @@ int         line_num;
 void getch()
 {
     ch = getc(fin);
+    printf("%c", ch);
 }
 
 /**
@@ -261,10 +262,11 @@ char *get_tkstr(int v)
 void lex()
 {
     do {
-        printf("%c", ch);
+        // printf("%c", ch);
         get_token();   //取单词
         usleep(10000);
         getch();
-    } while(token != TK_EOF);
+    } while(ch != EOF); 
+    // while(token != TK_EOF);
     printf("\ncode row = %d\n", line_num);
 }
