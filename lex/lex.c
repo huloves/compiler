@@ -4,7 +4,7 @@
 #include "dynarray.h"
 #include "dynstring.h"
 #include <string.h>
-#include <unistd.h>
+#include <stdlib.h>
 
 TkWord*     tk_hashtable[MAXKEY];   //哈希表容量
 int         token;
@@ -23,6 +23,148 @@ void getch()
 {
     ch = getc(fin);
     // printf("%c", ch);
+}
+
+/**
+ * is_nodigit - 判断c是否为字母或下划线
+ * **/
+static int is_nodigit(char c)
+{
+    return (c >= 'a' && c <= 'z') ||
+        (c >= 'A' && c <= 'Z') ||
+        c == '_';
+}
+
+static int is_digit(char c)
+{
+    return c >= '0' && c <= '9';
+}
+
+/**
+ * parse_identifier - 解析标识符
+ * **/
+TkWord* parse_identifier()
+{
+    dynstring_reset(&tkstr);
+    dynstring_chcat(&tkstr, ch);
+    getch();
+    while(is_nodigit(ch) || is_digit(ch)) {
+        dynstring_chcat(&tkstr, ch);
+        getch();
+    }
+    dynstring_chcat(&tkstr, '\0');
+    return tkword_insert(tkstr.data);
+}
+
+void parse_num()
+{
+    dynstring_reset(&tkstr);
+    dynstring_reset(&sourcestr);
+    do {
+        dynstring_chcat(&tkstr, ch);
+        dynstring_chcat(&sourcestr, ch);
+        getch();
+    } while(is_digit(ch));
+    if(ch == '.') {
+        do {
+            dynstring_chcat(&tkstr, ch);
+            dynstring_chcat(&sourcestr, ch);
+            getch();
+        } while(is_digit(ch));
+    }
+    dynstring_chcat(&tkstr, '\0');
+    dynstring_chcat(&sourcestr, '\0');
+    tkvalue = atoi(tkstr.data);
+}
+
+void parse_string(char sep)
+{
+    char c;
+    dynstring_reset(&tkstr);
+    dynstring_reset(&sourcestr);
+    dynstring_chcat(&sourcestr, sep);
+    getch();
+    for(;;) {
+        if(ch == sep) {
+            break;
+        } else if(ch == '\\') {
+            dynstring_chcat(&sourcestr, ch);
+            getch();
+            switch(ch) {
+                case '0':
+                {
+                    c = '\0';
+                    break;
+                }
+                case 'a':
+                {
+                    c = '\a';
+                    break;
+                }
+                case 'b':
+                {
+                    c = '\b';
+                    break;
+                }
+                case 'n':
+                {
+                    c = '\n';
+                    break;
+                }
+                case 'v':
+                {
+                    c = '\v';
+                    break;
+                }
+                case 'f':
+                {
+                    c = '\f';
+                    break;
+                }
+                case 'r':
+                {
+                    c = '\r';
+                    break;
+                }
+                case '\"':
+                {
+                    c = '\"';
+                    break;
+                }
+                case '\'':
+                {
+                    c = '\'';
+                    break;
+                }
+                case '\\':
+                {
+                    c = '\\';
+                    break;
+                }
+                default:
+                {
+                    c = ch;
+                    if(c >= '!' && c <= '~') {
+                        warning("非法转义字符: \'\\%c\'", c);
+                    } else {
+                        warning("非法转义字符: \'\\0x%x\'", c);
+                    }
+                    break;
+                }
+                dynstring_chcat(&tkstr, c);
+                dynstring_chcat(&sourcestr, ch);
+            }
+
+        } else {
+            dynstring_chcat(&tkstr, ch);
+            dynstring_chcat(&sourcestr, ch);
+            getch();
+        }
+    }
+    dynstring_chcat(&tkstr, '\0');
+    dynstring_chcat(&sourcestr, sep);
+    dynstring_chcat(&sourcestr, '\0');
+    getch();
 }
 
 /**
@@ -246,6 +388,195 @@ void preprocess()
 void get_token()
 {
     preprocess();
+    switch(ch) {
+        case 'a': case 'b': case 'c': case 'd': case 'e': case 'f': case 'g':
+        case 'h': case 'i': case 'j': case 'k': case 'l': case 'm': case 'n':
+        case 'o': case 'p': case 'q': case 'r': case 's': case 't': case 'u':
+        case 'v': case 'w': case 'x': case 'y': case 'z':
+        case 'A': case 'B': case 'C': case 'D': case 'E': case 'F': case 'G':
+        case 'H': case 'I': case 'J': case 'K': case 'L': case 'M': case 'N':
+        case 'O': case 'P': case 'Q': case 'R': case 'S': case 'T': case 'U':
+        case 'V': case 'W': case 'X': case 'Y': case 'Z':
+        {
+            TkWord* tp;
+            tp = parse_identifier();
+            token = tp->tkcode;
+            break;
+        }
+        case '0': case '1': case '2': case '3': case '4': case '5': case '6':
+        case '7': case '8': case '9':
+        {
+            parse_num();
+            token = TK_CINT;
+            break;
+        }
+        case '+':
+        {
+            getch();
+            token = TK_PLUS;
+            break;
+        }
+        case '-':
+        {
+            getch();
+            if(ch == '>') {
+                token = TK_POINTSTO;
+                getch();
+            } else {
+                token = TK_MINUS;
+            }
+            break;
+        }
+        case '/':
+        {
+            getch();
+            token = TK_DIVIDE;
+            break;
+        }
+        case '%':
+        {
+            getch();
+            token = TK_MOD;
+            break;
+        }
+        case '=':
+        {
+            getch();
+            if(ch == '=') {
+                token = TK_EQ;
+                getch();
+            } else {
+                token = TK_ASSIGN;
+            }
+            break;
+        }
+        case '!':
+        {
+            getch();
+            if(ch == '=') {
+                token = TK_NEQ;
+                getch();
+            } else {
+                error("don't support '!'");
+            }
+            break;
+        }
+        case '<':
+        {
+            getch();
+            if(ch == '=') {
+                token = TK_LEQ;
+                getch();
+            } else {
+                TK_LT;
+            }
+            break;
+        }
+        case '>':
+        {
+            getch();
+            if(ch == '=') {
+                token = TK_GEQ;
+                getch();
+            } else {
+                token = TK_LT;
+            }
+            break;
+        }
+        case '.':
+        {
+            getch();
+            if(ch == '.') {
+                getch();
+                if(ch != '.') {
+                    error("省略号拼写错误");
+                } else {
+                    token = TK_ELLIPSIS;
+                }
+                getch();
+            } else {
+                token = TK_DOT;
+            }
+            break;
+        }
+        case '&':
+        {
+            getch();
+            token = TK_AND;
+            break;
+        }
+        case ';':
+        {
+            getch();
+            token = TK_SEMICOLON;
+            break;
+        }
+        case ']':
+        {
+            getch();
+            token = TK_CLOSEBR;
+            break;
+        }
+        case '}':
+        {
+            getch();
+            token = TK_END;
+            break;
+        }
+        case '[':
+        {
+            getch();
+            token = TK_OPENBR;
+            break;
+        }
+        case '{':
+        {
+            getch();
+            token = TK_BEGIN;
+            break;
+        }
+        case ',':
+        {
+            getch();
+            token = TK_COMMA;
+            break;
+        }
+        case '(':
+        {
+            getch();
+            token = TK_OPENPA;
+            break;
+        }
+        case '*':
+        {
+            getch();
+            token = TK_STAR;
+            break;
+        }
+        case '\'':
+        {
+            parse_string(ch);
+            token = TK_CCHAR;
+            tkvalue = *(char*)tkstr.data;
+            break;
+        }
+        case '\"':
+        {
+            parse_string(ch);
+            token = TK_CSTR;
+            break;
+        }
+        case EOF:
+        {
+            token = TK_EOF;
+        }
+        default:
+        {
+            error("无法识别字符: \\x%02x", ch);
+            getch();
+            break;
+        }
+    }
 }
 
 /**
@@ -272,10 +603,6 @@ void lex()
         printf("%c", ch);
         fwrite(&ch, 1, 1, fout);
         getch();
-        if(ch == EOF) {
-            break;
-        }
-    } while(1); 
-    // while(token != TK_EOF);
+    } while(token != TK_EOF);
     printf("\ncode row = %d\n", line_num);
 }
