@@ -1,1 +1,1 @@
-#include<stdio.h>/**/intmain(){printf("Helloworld\n");return0;}ÿ
+#include<stdio.h>intmain(){printf("Helloworld\n");return0;}ÿ

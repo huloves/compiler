@@ -223,21 +223,19 @@ void preprocess()
         }
         if(ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n') {
             skip_white_space();
+        } 
+        else if(ch == '/') {
+            getch();
+            if(ch == '*') {
+                parse_comment();
+            } else {
+                ungetc(ch, fin);   //把一个字符退回到输入流中
+                ch = '/';
+                break;
+            }
         } else {
             break;
         }
-        //else if(ch == '/') {
-        //     getch();
-        //     if(ch == '*') {
-        //         parse_comment();
-        //     } else {
-        //         ungetc(ch, fin);   //把一个字符退回到输入流中
-        //         ch = '/';
-        //         break;
-        //     }
-        // } else {
-        //     break;
-        // }
     }
 }
 
