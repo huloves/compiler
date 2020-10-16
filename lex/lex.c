@@ -190,7 +190,8 @@ void parse_comment()
     getch();
     do {
         do {
-            if(ch == '\n' || ch == '*' || ch == TK_EOF) {
+            // if(ch == '\n' || ch == '*' || ch == TK_EOF) {
+            if(ch == '\n' || ch == '*' || ch == EOF) {
                 break;
             } else {
                 getch();
