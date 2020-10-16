@@ -149,6 +149,15 @@ void init_lex()
 }
 
 /**
+ * print_tktable - 打印单词表tktable**/
+void print_tktable()
+{
+    for(int i=0; i<tktable.count; i++) {
+        printf("%s\n", ((TkWord*)tktable.data[i])->spelling);
+    }
+}
+
+/**
  * skip_white_space - 忽略空格
  * **/
 void skip_white_space()
@@ -161,7 +170,7 @@ void skip_white_space()
             }
             line_num++;
         }
-        printf("%c", ch);
+        printf("%c\n", ch);
         getch();
     }
 }
@@ -204,18 +213,19 @@ void preprocess()
     while(1) {
         if(ch == ' ' || ch == '\t' || ch == '\r') {
             skip_white_space();
-        } else if(ch == '/') {
-            getch();
-            if(ch == '*') {
-                parse_comment();
-            } else {
-                ungetc(ch, fin);   //把一个字符退回到输入流中
-                ch = '/';
-                break;
-            }
-        } else {
-            break;
-        }
+        } 
+        // else if(ch == '/') {
+        //     getch();
+        //     if(ch == '*') {
+        //         parse_comment();
+        //     } else {
+        //         ungetc(ch, fin);   //把一个字符退回到输入流中
+        //         ch = '/';
+        //         break;
+        //     }
+        // } else {
+        //     break;
+        // }
     }
 }
 

@@ -49,6 +49,7 @@ void init()
 {
     line_num = 1;
     init_lex();
+    print_tktable();
 }
 
 /**
@@ -61,7 +62,7 @@ int main(int argc, char** argv)
         printf("can't open source file: %s\n", argv[1]);
         return 0;
     }
-    init();   //初始化单词表
+    init();   //初始化单词表和行数
     getch();
     fclose(fin);
     printf("finish!\n");

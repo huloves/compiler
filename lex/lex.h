@@ -36,4 +36,6 @@ char *get_tkstr(int v);
  * **/
 void getch();
 
+void print_tktable();
+
 #endif
