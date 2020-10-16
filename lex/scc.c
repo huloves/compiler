@@ -4,9 +4,10 @@
 #include <string.h>
 #include <unistd.h>
 
-FILE* fin;
+FILE* fin = NULL;
 char* filename;
 char* outfile;
+int line_num;
 
 /**
  * elf_hash - 计算哈希地址
@@ -37,7 +38,7 @@ void *mallocz(int size)
 	ptr = malloc(size);
 	if (!ptr && size)
         perror("内存分配失败");
-    memset(ptr, 0, size);
+    memset(ptr, 0, size); 
     return ptr;
 }
 

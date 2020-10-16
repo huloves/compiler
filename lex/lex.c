@@ -4,10 +4,16 @@
 #include "dynstring.h"
 #include <string.h>
 
-TkWord* tk_hashtable[MAXKEY];   //哈希表容量
-int token;
-DynString sourcestr;
-char ch;
+TkWord*     tk_hashtable[MAXKEY];   //哈希表容量
+int         token;
+DynString   sourcestr;
+char        ch;
+DynArray    tktable;		// 单词表
+DynString   tkstr; 
+int         tkvalue;
+DynString   tkstr;
+int         tkvalue;
+int         line_num;
 
 /**
  * getch - 从文件中读取一个字节

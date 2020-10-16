@@ -3,7 +3,7 @@ CC = gcc
 LD = ld
 LIB = -I lex/
 CFLAGS = -c $(LIB)
-# LDFLAGS = -Map $(BUILD_DIR)/scc.map
+LDFLAGS = -e main 
 
 OBJS = $(BUILD_DIR)/scc.o $(BUILD_DIR)/lex.o $(BUILD_DIR)/dynarray.o \
 		$(BUILD_DIR)/dynstring.o
@@ -25,7 +25,7 @@ $(BUILD_DIR)/dynstring.o: lex/dynstring.c lex/dynstring.h
 
 ###### 链接文件 ######
 scc: $(OBJS)
-	$(LD) $^ -o $@
+	gcc $^ -o $@
 
 .PHONT : clean mk_dir all
 

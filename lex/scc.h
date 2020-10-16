@@ -2,6 +2,7 @@
 #define __LEX_SCC_H
 
 #include <stdio.h>
+#include "dynstring.h"
 
 #define STR_INIT_SIZE 8
 #define MAXKEY 1024
@@ -63,10 +64,6 @@ enum e_TokenCode
     TK_IDENT
 };
 
-extern char* filename;
-extern int line_num;
-extern int token;
-
 typedef struct TkWord
 {
     int tkcode;   //单词编码
@@ -76,7 +73,13 @@ typedef struct TkWord
     struct Symbol* sym_identifier;   //指向单词所表示的标识符
 }TkWord;
 
-extern FILE* fin;
+extern DynString tkstr;
+extern FILE *fin;
+extern char ch;
+extern char *filename;
+extern int token;
+extern int tkvalue;
+extern int line_num;
 
 /**
  * elf_hash - 计算哈希地址

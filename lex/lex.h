@@ -4,6 +4,8 @@
 #include "scc.h"
 #include "dynarray.h"
 
+// extern DynArray tktable;			// 单词动态数组
+extern TkWord* tk_hashtable[MAXKEY];// 单词哈希表
 extern DynArray tktable;			// 单词动态数组
 
 /**
