@@ -22,7 +22,7 @@ int         tkvalue;
 void getch()
 {
     ch = getc(fin);
-    printf("%c", ch);
+    // printf("%c", ch);
 }
 
 /**
@@ -173,6 +173,7 @@ void skip_white_space()
             }
             line_num++;
         } else if(ch == '\n') {
+            printf("%c", ch);
             line_num++;
             // getch();
         }
@@ -268,8 +269,9 @@ char *get_tkstr(int v)
 void lex()
 {
     do {
-        // printf("%c", ch);
         get_token();   //取单词
+        printf("%c", ch);
+        fwrite(&ch, 1, 1, fout);
         getch();
         if(ch == EOF) {
             break;

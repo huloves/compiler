@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 FILE* fin = NULL;
+FILE* fout = NULL;
 char* filename;
 char* outfile;
 int line_num;
@@ -77,6 +78,8 @@ int main(int argc, char** argv)
         printf("file open success!\n");
     }
 
+    fout = fopen("outfile", "wt");
+    
     init();   //初始化单词表和行数
 
     getch();
@@ -86,6 +89,9 @@ int main(int argc, char** argv)
     clean_up();
 
     fclose(fin);
+    fclose(fout);
+
     printf("finish!\n");
+
     return 1;
 }
