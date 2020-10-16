@@ -315,7 +315,6 @@ void skip_white_space()
             }
             line_num++;
         } else if(ch == '\n') {
-            printf("%c", ch);
             line_num++;
             // getch();
         }
@@ -523,6 +522,12 @@ void get_token()
             token = TK_END;
             break;
         }
+        case ')':
+        {
+            getch();
+            token = TK_CLOSEPA;
+            break;
+        }
         case '[':
         {
             getch();
@@ -572,7 +577,7 @@ void get_token()
         }
         default:
         {
-            error("无法识别字符: \\x%02x", ch);
+            error("无法识别字符: \\x%02x --- ___%c___", ch, ch);
             getch();
             break;
         }
@@ -600,7 +605,7 @@ void lex()
 {
     do {
         get_token();   //取单词
-        printf("%c", ch);
+        // print_tktable();
         fwrite(&ch, 1, 1, fout);
         getch();
     } while(token != TK_EOF);
