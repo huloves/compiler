@@ -7,6 +7,7 @@
 // extern DynArray tktable;			// 单词动态数组
 extern TkWord* tk_hashtable[MAXKEY];// 单词哈希表
 extern DynArray tktable;			// 单词动态数组
+extern char ch;
 
 /**
  * tkwork_direct_insert - 运算符、关键字、常亮直接放入单词表
@@ -36,6 +37,14 @@ char *get_tkstr(int v);
  * **/
 void getch();
 
+/**
+ * print_tktable - 打印单词表
+ * **/
 void print_tktable();
+
+/**
+ * lex - 词法分析
+ * **/
+void lex();
 
 #endif

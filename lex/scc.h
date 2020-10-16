@@ -75,7 +75,6 @@ typedef struct TkWord
 
 extern DynString tkstr;
 extern FILE *fin;
-extern char ch;
 extern char *filename;
 extern int token;
 extern int tkvalue;

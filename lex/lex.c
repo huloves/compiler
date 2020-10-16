@@ -1,8 +1,10 @@
 #include "lex.h"
 #include "scc.h"
+#include "error.h"
 #include "dynarray.h"
 #include "dynstring.h"
 #include <string.h>
+#include <unistd.h>
 
 TkWord*     tk_hashtable[MAXKEY];   //哈希表容量
 int         token;
@@ -170,7 +172,7 @@ void skip_white_space()
             }
             line_num++;
         }
-        printf("%c\n", ch);
+        // printf("%c", ch);
         getch();
     }
 }
@@ -199,7 +201,7 @@ void parse_comment()
                 return;
             }
         } else {
-            perror("一直到文件尾未发现配对的注释结束符");
+            error("一直到文件尾未发现配对的注释结束符");
             return;
         }
     } while(1);
@@ -213,8 +215,10 @@ void preprocess()
     while(1) {
         if(ch == ' ' || ch == '\t' || ch == '\r') {
             skip_white_space();
-        } 
-        // else if(ch == '/') {
+        } else {
+            break;
+        }
+        //else if(ch == '/') {
         //     getch();
         //     if(ch == '*') {
         //         parse_comment();
@@ -257,7 +261,10 @@ char *get_tkstr(int v)
 void lex()
 {
     do {
+        printf("%c", ch);
         get_token();   //取单词
+        usleep(10000);
+        getch();
     } while(token != TK_EOF);
     printf("\ncode row = %d\n", line_num);
 }

@@ -2,6 +2,7 @@
 #include "scc.h"
 #include "lex.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 /**
  * handle_exception - 异常处理

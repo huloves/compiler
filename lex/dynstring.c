@@ -1,4 +1,5 @@
 #include "dynstring.h"
+#include "error.h"
 #include <stdlib.h>
 
 #define STR_INIT_SIZE 8
@@ -58,7 +59,7 @@ void dynstring_realloc(DynString* pstr, int new_size)
     }
     data = realloc(pstr->data, capacity);
     if(!data) {
-        perror("relloc error");
+        error("relloc error");
     }
     pstr->capacity = capacity;
     pstr->data = data;

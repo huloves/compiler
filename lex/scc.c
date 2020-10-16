@@ -49,7 +49,19 @@ void init()
 {
     line_num = 1;
     init_lex();
-    print_tktable();
+    // print_tktable();
+    printf("lex init done!\n");
+}
+
+/**
+ * clean_up - 释放单词表空间
+ * **/
+static void clean_up()
+{
+    for(int i = TK_IDENT; i< tktable.count; i++) {
+        free(tktable.data[i]);
+    }
+    free(tktable.data);
 }
 
 /**
@@ -61,9 +73,18 @@ int main(int argc, char** argv)
     if(!fin) {
         printf("can't open source file: %s\n", argv[1]);
         return 0;
+    } else {
+        printf("file open success!\n");
     }
+
     init();   //初始化单词表和行数
+
     getch();
+    
+    lex();
+
+    clean_up();
+
     fclose(fin);
     printf("finish!\n");
     return 1;

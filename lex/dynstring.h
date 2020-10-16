@@ -1,7 +1,7 @@
 #ifndef __LEX_DYNSTRING_H
 #define __LEX_DYNSTRING_H
 
-#include "scc.h"
+// #include "scc.h"
 
 #define STR_INIT_SIZE 8   //初始化字符串大小
 

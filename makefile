@@ -1,12 +1,11 @@
 BUILD_DIR = ./build
 CC = gcc
-LD = ld
+LD = gcc
 LIB = -I lex/
 CFLAGS = -c $(LIB)
-LDFLAGS = -e main 
 
 OBJS = $(BUILD_DIR)/scc.o $(BUILD_DIR)/lex.o $(BUILD_DIR)/dynarray.o \
-		$(BUILD_DIR)/dynstring.o
+		$(BUILD_DIR)/dynstring.o $(BUILD_DIR)/error.o
 
 ###### c代码编译 ######
 $(BUILD_DIR)/scc.o: lex/scc.c lex/scc.h \
@@ -23,9 +22,13 @@ $(BUILD_DIR)/dynarray.o: lex/dynarray.c lex/dynarray.h
 $(BUILD_DIR)/dynstring.o: lex/dynstring.c lex/dynstring.h
 	$(CC) $(CFLAGS) $< -o $@
 
+$(BUILD_DIR)/error.o: lex/error.c lex/error.h \
+					lex/scc.h lex/lex.h
+	$(CC) $(CFLAGS) $< -o $@
+
 ###### 链接文件 ######
 scc: $(OBJS)
-	gcc $^ -o $@
+	$(LD) $^ -o $@
 
 .PHONT : clean mk_dir all
 
