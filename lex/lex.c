@@ -15,7 +15,6 @@ DynString   tkstr;
 int         tkvalue;
 DynString   tkstr;
 int         tkvalue;
-int         line_num;
 
 /**
  * getch - 从文件中读取一个字节
@@ -165,13 +164,17 @@ void print_tktable()
  * **/
 void skip_white_space()
 {
-    while(ch == ' ' || ch == '\t' || ch == '\r') {
+    while(ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n') {
         if(ch == '\r') {
             getch();
+            printf("----%c----", ch);
             if(ch != '\n') {
                 return;
             }
             line_num++;
+        } else if(ch == '\n') {
+            line_num++;
+            // getch();
         }
         // printf("%c", ch);
         getch();
@@ -214,7 +217,10 @@ void parse_comment()
 void preprocess()
 {
     while(1) {
-        if(ch == ' ' || ch == '\t' || ch == '\r') {
+        if(ch == '\r') {
+            printf("1\n");
+        }
+        if(ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n') {
             skip_white_space();
         } else {
             break;
@@ -264,9 +270,11 @@ void lex()
     do {
         // printf("%c", ch);
         get_token();   //取单词
-        usleep(10000);
         getch();
-    } while(ch != EOF); 
+        if(ch == EOF) {
+            break;
+        }
+    } while(1); 
     // while(token != TK_EOF);
     printf("\ncode row = %d\n", line_num);
 }
