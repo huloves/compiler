@@ -1,6 +1,51 @@
- (
-
-     ;     ; ;(  )
-  ;
- ;
-�
++
+-
+*
+/
+%
+==
+!=
+<
+<=
+>
+>=
+=
+->
+.
+&
+(
+)
+[
+]
+{
+}
+;
+,
+...
+End_Of_File
+整型常量
+字符常量
+字符串常量
+char
+short
+int
+void
+struct
+if
+else
+for
+continue
+break
+return
+sizeof
+__align
+__cdecl
+__stdcall
+main
+a
+b
+c
+printf
+entry
+ret
+exit

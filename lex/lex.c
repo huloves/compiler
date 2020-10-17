@@ -315,6 +315,20 @@ void print_tktable()
     }
 }
 
+void tktable_print2file()
+{
+    char buf[1024];
+    for(int i=0; i<tktable.count; i++) {
+        // fwrite(((TkWord*)tktable.data[i])->spelling, strlen(((TkWord*)tktable.data[i])->spelling), 
+        //         strlen(((TkWord*)tktable.data[i])->spelling), fout);
+        // fwrite("\n", 1, 1, fout);
+        // fwrite(p, strlen(p), strlen(p), fout);
+        sprintf(buf, "%s\n", ((TkWord*)tktable.data[i])->spelling);
+        printf("%s\n", ((TkWord*)tktable.data[i])->spelling);
+        fwrite(buf, strlen(buf), 1, fout);
+    }
+}
+
 /**
  * skip_white_space - 忽略空格
  * **/
@@ -621,8 +635,10 @@ void lex()
     do {
         get_token();   //取单词
         // print_tktable();
-        fwrite(&ch, 1, 1, fout);
+        // tktable_print2file();
+        // fwrite(&ch, 1, 1, fout);
         getch();
     } while(token != TK_EOF);
+    tktable_print2file();
     printf("code row = %d\n", line_num);
 }
