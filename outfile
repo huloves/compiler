@@ -41,11 +41,21 @@ sizeof
 __align
 __cdecl
 __stdcall
+point
+x
+y
 main
 a
+1
+3
 b
+12
+21
 c
+66
 printf
+Hello World!n
+0
 _entry
 ret
 exit

@@ -11,6 +11,9 @@ int         token;
 DynString   sourcestr;
 char        ch;
 DynArray    tktable;		// 单词表
+DynArray    int_table;
+DynArray    string_table;
+DynArray    char_table;
 DynString   tkstr; 
 int         tkvalue;
 DynString   tkstr;
@@ -48,7 +51,7 @@ static int is_digit(char c)
 /**
  * parse_identifier - 解析标识符
  * **/
-TkWord* parse_identifier()
+void parse_identifier()
 {
     dynstring_reset(&tkstr);
     dynstring_chcat(&tkstr, ch);
@@ -58,7 +61,7 @@ TkWord* parse_identifier()
         getch();
     }
     dynstring_chcat(&tkstr, '\0');
-    return tkword_insert(tkstr.data);
+    // return tkword_insert(tkstr.data);
 }
 
 /**
@@ -82,6 +85,7 @@ void parse_num()
     }
     dynstring_chcat(&tkstr, '\0');
     dynstring_chcat(&sourcestr, '\0');
+    tkword_insert(tkstr.data);   //将整型常量加入单词表
     tkvalue = atoi(tkstr.data);
 }
 
@@ -176,11 +180,12 @@ void parse_string(char sep)
     dynstring_chcat(&tkstr, '\0');
     dynstring_chcat(&sourcestr, sep);
     dynstring_chcat(&sourcestr, '\0');
+    tkword_insert(tkstr.data);   //将字符串常量加入单词表
     getch();
 }
 
 /**
- * tkwork_direct_insert - 运算符、关键字、常亮直接放入单词表
+ * tkwork_direct_insert - 运算符、关键字、常量直接放入单词表
  * @tp: 单词指针
  * **/
 TkWord* tkword_direct_insert(TkWord* tp)
@@ -300,6 +305,9 @@ void init_lex()
     };
 
     dynarray_init(&tktable, 8);
+    dynarray_init(&int_table, 8);
+    dynarray_init(&string_table, 8);
+    dynarray_init(&char_table, 8);
     for(tp = &keywords[0]; tp->spelling != NULL; tp++) {
         tkword_direct_insert(tp);
     }
@@ -423,7 +431,9 @@ void get_token()
         case '_':
         {
             TkWord* tp;
-            tp = parse_identifier();
+            // tp = parse_identifier();
+            parse_identifier();
+            tp = tkword_insert(tkstr.data);
             token = tp->tkcode;
             break;
         }
