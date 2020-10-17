@@ -13,7 +13,7 @@ printf("Hello World!\n");
 return 0;
 }
 
-void entry()
+void _entry()
 {
 int ret;
 ret = main();

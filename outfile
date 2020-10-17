@@ -46,6 +46,6 @@ a
 b
 c
 printf
-entry
+_entry
 ret
 exit

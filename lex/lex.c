@@ -319,10 +319,6 @@ void tktable_print2file()
 {
     char buf[1024];
     for(int i=0; i<tktable.count; i++) {
-        // fwrite(((TkWord*)tktable.data[i])->spelling, strlen(((TkWord*)tktable.data[i])->spelling), 
-        //         strlen(((TkWord*)tktable.data[i])->spelling), fout);
-        // fwrite("\n", 1, 1, fout);
-        // fwrite(p, strlen(p), strlen(p), fout);
         sprintf(buf, "%s\n", ((TkWord*)tktable.data[i])->spelling);
         printf("%s\n", ((TkWord*)tktable.data[i])->spelling);
         fwrite(buf, strlen(buf), 1, fout);
@@ -359,8 +355,8 @@ void parse_comment()
     getch();
     do {
         do {
-            // if(ch == '\n' || ch == '*' || ch == TK_EOF) {
-            if(ch == '\n' || ch == '*' || ch == EOF) {
+            if(ch == '\n' || ch == '*' || ch == TK_EOF) {
+            // if(ch == '\n' || ch == '*' || ch == EOF) {
                 break;
             } else {
                 getch();
@@ -424,6 +420,7 @@ void get_token()
         case 'H': case 'I': case 'J': case 'K': case 'L': case 'M': case 'N':
         case 'O': case 'P': case 'Q': case 'R': case 'S': case 'T': case 'U':
         case 'V': case 'W': case 'X': case 'Y': case 'Z':
+        case '_':
         {
             TkWord* tp;
             tp = parse_identifier();
