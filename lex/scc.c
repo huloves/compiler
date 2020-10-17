@@ -77,21 +77,14 @@ int main(int argc, char** argv)
     } else {
         printf("file open success!\n");
     }
-
+    filename = argv[1];
     fout = fopen("outfile", "wt");
-    
     init();   //初始化单词表和行数
-
     getch();
-    
     lex();
-
     clean_up();
-
     fclose(fin);
     fclose(fout);
-
     printf("finish!\n");
-
     return 1;
 }

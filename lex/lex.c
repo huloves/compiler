@@ -27,6 +27,7 @@ void getch()
 
 /**
  * is_nodigit - 判断c是否为字母或下划线
+ * @c: 要判断的字符
  * **/
 static int is_nodigit(char c)
 {
@@ -35,6 +36,10 @@ static int is_nodigit(char c)
         c == '_';
 }
 
+/**
+ * is_digit - 判断c是否为数字
+ * @c: 要判断的字符
+ * **/
 static int is_digit(char c)
 {
     return c >= '0' && c <= '9';
@@ -56,6 +61,9 @@ TkWord* parse_identifier()
     return tkword_insert(tkstr.data);
 }
 
+/**
+ * parse_num - 解析整型常量
+ * **/
 void parse_num()
 {
     dynstring_reset(&tkstr);
@@ -77,6 +85,10 @@ void parse_num()
     tkvalue = atoi(tkstr.data);
 }
 
+/**
+ * parse_string - 解析字符常量、字符串常量
+ * @sep: 字符常量界标识为单引号(')，字符串常量标识为双引号(")
+ * **/
 void parse_string(char sep)
 {
     char c;
@@ -153,8 +165,8 @@ void parse_string(char sep)
                 }
                 dynstring_chcat(&tkstr, c);
                 dynstring_chcat(&sourcestr, ch);
+                getch();
             }
-
         } else {
             dynstring_chcat(&tkstr, ch);
             dynstring_chcat(&sourcestr, ch);
@@ -169,6 +181,7 @@ void parse_string(char sep)
 
 /**
  * tkwork_direct_insert - 运算符、关键字、常亮直接放入单词表
+ * @tp: 单词指针
  * **/
 TkWord* tkword_direct_insert(TkWord* tp)
 {
@@ -182,8 +195,8 @@ TkWord* tkword_direct_insert(TkWord* tp)
 
 /**
  * tkwork_find - 在单词表中查找单词
- * @p - 要查找的单词
- * @keyno - 要查找单词的哈希值
+ * @p: 要查找的单词
+ * @keyno: 要查找单词的哈希值
  * **/
 TkWord* tkword_find(char* p, int keyno)
 {
@@ -293,7 +306,8 @@ void init_lex()
 }
 
 /**
- * print_tktable - 打印单词表tktable**/
+ * print_tktable - 打印单词表tktable
+ * **/
 void print_tktable()
 {
     for(int i=0; i<tktable.count; i++) {
@@ -574,6 +588,7 @@ void get_token()
         case EOF:
         {
             token = TK_EOF;
+            break;
         }
         default:
         {
@@ -609,5 +624,5 @@ void lex()
         fwrite(&ch, 1, 1, fout);
         getch();
     } while(token != TK_EOF);
-    printf("\ncode row = %d\n", line_num);
+    printf("code row = %d\n", line_num);
 }
