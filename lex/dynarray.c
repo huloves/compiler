@@ -36,6 +36,7 @@ void dynarray_add(DynArray* parr, void* data)
         dynarray_realloc(parr, count * sizeof(void*));
     }
     parr->data[count - 1] = data;
+    // printf("%s\n", ((TkWord*)data)->spelling);
     parr->count = count;
 }
 

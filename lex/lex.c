@@ -183,7 +183,8 @@ void parse_string(char sep)
     dynstring_chcat(&tkstr, '\0');
     dynstring_chcat(&sourcestr, sep);
     dynstring_chcat(&sourcestr, '\0');
-    tkword_insert(tkstr.data);   //将字符串常量加入单词表
+    // tkword_insert(tkstr.data);   //将字符串常量加入单词表
+    constant_table_insert(tkstr.data);
     getch();
 }
 
@@ -225,6 +226,7 @@ TkWord* tkword_find(char* p, int keyno)
  * @hashtable: 要查找的哈希表
  * **/
 TkWord* hashtable_find(char* p, int keyno, TkWord* hashtable[])
+// TkWord* hashtable_find(char* p, int keyno)
 {
     TkWord* tp = NULL, * tp1;
     for(tp1 = hashtable[keyno]; tp1; tp1 = tp1->next) {
@@ -254,7 +256,7 @@ TkWord* tkword_insert(char* p)
         tp = (TkWord*)mallocz(sizeof(TkWord) + length + 1);
         tp->next = tk_hashtable[keyno];
         tk_hashtable[keyno] = tp;
-        dynarray_add(&tktable, tp);
+        // dynarray_add(&tktable, tp);
         tp->tkcode = tktable.count - 1;
         s = (char*)tp + sizeof(TkWord);
         tp->spelling = (char*)s;
@@ -265,6 +267,7 @@ TkWord* tkword_insert(char* p)
 
         tp->sym_identifier = NULL;
         tp->sym_struct = NULL;
+        dynarray_add(&tktable, tp);
     }
     return tp;
 }
@@ -274,6 +277,7 @@ TkWord* tkword_insert(char* p)
  * @p: 要加入的单词
  * **/
 TkWord* constant_table_insert(char* p) {
+    // printf("%s\n", p);
     TkWord* tp;
     int keyno;
     char* s;
@@ -282,12 +286,13 @@ TkWord* constant_table_insert(char* p) {
 
     keyno = elf_hash(p);
     tp = hashtable_find(p, keyno, constant_hashtable);
+    // tp = hashtable_find(p, keyno);
     if(tp == NULL) {
         length = strlen(p);
         tp = (TkWord*)mallocz(sizeof(TkWord) + length + 1);
         tp->next = constant_hashtable[keyno];
         constant_hashtable[keyno] = tp;
-        dynarray_add(&constant_table, tp);
+        // dynarray_add(&constant_table, tp);
         tp->tkcode = constant_table.count - 1;
         s = (char*)tp + sizeof(TkWord);
         tp->spelling = (char*)s;
@@ -298,7 +303,9 @@ TkWord* constant_table_insert(char* p) {
 
         tp->sym_identifier = NULL;
         tp->sym_struct = NULL;
+        dynarray_add(&constant_table, tp);
     }
+    // print_consttable();
     return tp;
 }
 
@@ -314,7 +321,7 @@ TkWord* reserved_table_insert(char* p) {
     int length;
 
     keyno = elf_hash(p);
-    tp = hashtable_find(p, keyno, reserved_hashtable);
+    // tp = hashtable_find(p, keyno, reserved_hashtable);
     if(tp == NULL) {
         length = strlen(p);
         tp = (TkWord*)mallocz(sizeof(TkWord) + length + 1);
@@ -409,6 +416,13 @@ void print_tktable()
     }
 }
 
+void print_consttable()
+{
+    for(int i=0; i<constant_table.count; i++) {
+        printf("%s\n", ((TkWord*)constant_table.data[i])->spelling);
+    }
+}
+
 void tktable_print2file()
 {
     char buf[1024];
@@ -424,7 +438,7 @@ void consttable_print2file()
     char buf[1024];
     for(int i=0; i<constant_table.count; i++) {
         sprintf(buf, "%s\n", ((TkWord*)constant_table.data[i])->spelling);
-        printf("%s\n", buf);
+        // printf("%s\n", buf);
         fwrite(buf, strlen(buf), 1, consttable_file);
     }
 }
@@ -743,5 +757,6 @@ void lex()
         getch();
     } while(token != TK_EOF);
     tktable_print2file();
+    consttable_print2file();
     printf("code row = %d\n", line_num);
 }

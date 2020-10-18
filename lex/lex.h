@@ -48,6 +48,8 @@ void getch();
  * **/
 void print_tktable();
 
+void print_consttable();
+
 /**
  * lex - 词法分析
  * **/
