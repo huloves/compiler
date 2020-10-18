@@ -427,7 +427,7 @@ void tktable_print2file()
 {
     char buf[1024];
     for(int i=0; i<tktable.count; i++) {
-        sprintf(buf, "%s\n", ((TkWord*)tktable.data[i])->spelling);
+        sprintf(buf, "<%d, %s>\n", ((TkWord*)tktable.data[i])->tkcode, ((TkWord*)tktable.data[i])->spelling);
         // printf("%s\n", ((TkWord*)tktable.data[i])->spelling);
         fwrite(buf, strlen(buf), 1, fout);
     }
