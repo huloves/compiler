@@ -497,6 +497,14 @@ void parse_comment()
 }
 
 /**
+ * unflod - 宏展开
+ * **/
+void unflold()
+{
+
+}
+
+/**
  * preprocess - 预处理，忽略空白字符及注释
  * **/
 void preprocess()
@@ -517,7 +525,11 @@ void preprocess()
                 ch = '/';
                 break;
             }
-        } else {
+        } 
+        // else if(ch == '#') {
+            // unfold();
+        // } 
+        else {
             break;
         }
     }

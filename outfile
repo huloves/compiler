@@ -38,9 +38,9 @@
 <37, break>
 <38, return>
 <39, sizeof>
-<40, __align>
-<41, __cdecl>
-<42, __stdcall>
+<41, __align>
+<42, __cdecl>
+<43, __stdcall>
 <42, point>
 <43, x>
 <44, y>

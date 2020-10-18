@@ -55,6 +55,7 @@ enum e_TokenCode
     KW_BREAK,   //break
     KW_RETURN,   //return
     KW_SIZEOF,   //sizeof
+    WK_DEFINE,   //define
 
     KW_ALIGN,   //__align
     KW_CDECL,   //__cdecl
