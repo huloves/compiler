@@ -27,6 +27,12 @@ TkWord* tkword_find(char* p, int keyno);
 TkWord* tkword_insert(char* p);
 
 /**
+ * constant_table_insert - 将单词加入常量表
+ * @p: 要加入的单词
+ * **/
+TkWord* constant_table_insert(char* p);
+
+/**
  * get_tkstr - 取得单词v所代表的源码字符串，错误提示用
  * @v: 单词编号
  **/

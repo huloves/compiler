@@ -6,6 +6,7 @@
 
 FILE* fin = NULL;
 FILE* fout = NULL;
+FILE* consttable_file = NULL;
 char* filename;
 char* outfile;
 int line_num;
@@ -79,12 +80,14 @@ int main(int argc, char** argv)
     }
     filename = argv[1];
     fout = fopen("outfile", "wt");
+    consttable_file = fopen("constant_table", "wt");
     init();   //初始化单词表和行数
     getch();
     lex();
     clean_up();
     fclose(fin);
     fclose(fout);
+    fclose(consttable_file);
     printf("finish!\n");
     return 1;
 }

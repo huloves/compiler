@@ -11,8 +11,10 @@ int         token;
 DynString   sourcestr;
 char        ch;
 DynArray    tktable;		// 单词表
-DynArray    int_table;
-DynArray    string_table;
+DynArray    constant_table;   //常量表
+TkWord*     constant_hashtable[MAXKEY];   //常量哈希表
+DynArray    reserved_table;   //保留字表
+TkWord*     reserved_hashtable[MAXKEY];   //保留字哈希表
 DynArray    char_table;
 DynString   tkstr; 
 int         tkvalue;
@@ -85,7 +87,8 @@ void parse_num()
     }
     dynstring_chcat(&tkstr, '\0');
     dynstring_chcat(&sourcestr, '\0');
-    tkword_insert(tkstr.data);   //将整型常量加入单词表
+    // tkword_insert(tkstr.data);   //将整型常量加入单词表
+    constant_table_insert(tkstr.data);
     tkvalue = atoi(tkstr.data);
 }
 
@@ -216,6 +219,24 @@ TkWord* tkword_find(char* p, int keyno)
 }
 
 /**
+ * hashtable_find - 在hashtable中查找单词
+ * @p: 要查找的单词
+ * @keyno: 要查找单词的哈希值
+ * @hashtable: 要查找的哈希表
+ * **/
+TkWord* hashtable_find(char* p, int keyno, TkWord* hashtable[])
+{
+    TkWord* tp = NULL, * tp1;
+    for(tp1 = hashtable[keyno]; tp1; tp1 = tp1->next) {
+        if(!strcmp(p, tp1->spelling)) {
+            token = tp1->tkcode;
+            tp = tp1;
+        }
+    }
+    return tp;
+}
+
+/**
  * tkword_insert - 标识符插入单词表，先查找，查不到再插入单词表
  * **/
 TkWord* tkword_insert(char* p)
@@ -235,6 +256,72 @@ TkWord* tkword_insert(char* p)
         tk_hashtable[keyno] = tp;
         dynarray_add(&tktable, tp);
         tp->tkcode = tktable.count - 1;
+        s = (char*)tp + sizeof(TkWord);
+        tp->spelling = (char*)s;
+        for(end = p + length; p < end;) {
+            *s++ = *p++;
+        }
+        *s = (char)'\0';
+
+        tp->sym_identifier = NULL;
+        tp->sym_struct = NULL;
+    }
+    return tp;
+}
+
+/**
+ * constant_table_insert - 将单词加入常量表
+ * @p: 要加入的单词
+ * **/
+TkWord* constant_table_insert(char* p) {
+    TkWord* tp;
+    int keyno;
+    char* s;
+    char* end;
+    int length;
+
+    keyno = elf_hash(p);
+    tp = hashtable_find(p, keyno, constant_hashtable);
+    if(tp == NULL) {
+        length = strlen(p);
+        tp = (TkWord*)mallocz(sizeof(TkWord) + length + 1);
+        tp->next = constant_hashtable[keyno];
+        constant_hashtable[keyno] = tp;
+        dynarray_add(&constant_table, tp);
+        tp->tkcode = constant_table.count - 1;
+        s = (char*)tp + sizeof(TkWord);
+        tp->spelling = (char*)s;
+        for(end = p + length; p < end;) {
+            *s++ = *p++;
+        }
+        *s = (char)'\0';
+
+        tp->sym_identifier = NULL;
+        tp->sym_struct = NULL;
+    }
+    return tp;
+}
+
+/**
+ * reserved_table_insert - 将单词加入保留字表
+ * @p: 要加入的单词
+ * **/
+TkWord* reserved_table_insert(char* p) {
+    TkWord* tp;
+    int keyno;
+    char* s;
+    char* end;
+    int length;
+
+    keyno = elf_hash(p);
+    tp = hashtable_find(p, keyno, reserved_hashtable);
+    if(tp == NULL) {
+        length = strlen(p);
+        tp = (TkWord*)mallocz(sizeof(TkWord) + length + 1);
+        tp->next = reserved_hashtable[keyno];
+        reserved_hashtable[keyno] = tp;
+        dynarray_add(&reserved_table, tp);
+        tp->tkcode = reserved_table.count - 1;
         s = (char*)tp + sizeof(TkWord);
         tp->spelling = (char*)s;
         for(end = p + length; p < end;) {
@@ -305,9 +392,8 @@ void init_lex()
     };
 
     dynarray_init(&tktable, 8);
-    dynarray_init(&int_table, 8);
-    dynarray_init(&string_table, 8);
-    dynarray_init(&char_table, 8);
+    dynarray_init(&constant_table, 8);
+    dynarray_init(&reserved_table, 8);
     for(tp = &keywords[0]; tp->spelling != NULL; tp++) {
         tkword_direct_insert(tp);
     }
@@ -328,8 +414,18 @@ void tktable_print2file()
     char buf[1024];
     for(int i=0; i<tktable.count; i++) {
         sprintf(buf, "%s\n", ((TkWord*)tktable.data[i])->spelling);
-        printf("%s\n", ((TkWord*)tktable.data[i])->spelling);
+        // printf("%s\n", ((TkWord*)tktable.data[i])->spelling);
         fwrite(buf, strlen(buf), 1, fout);
+    }
+}
+
+void consttable_print2file()
+{
+    char buf[1024];
+    for(int i=0; i<constant_table.count; i++) {
+        sprintf(buf, "%s\n", ((TkWord*)constant_table.data[i])->spelling);
+        printf("%s\n", buf);
+        fwrite(buf, strlen(buf), 1, consttable_file);
     }
 }
 
