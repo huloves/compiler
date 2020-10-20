@@ -63,6 +63,7 @@ void parse_identifier()
         getch();
     }
     dynstring_chcat(&tkstr, '\0');
+    printf("%s", tkstr.data);
     // return tkword_insert(tkstr.data);
 }
 
@@ -90,6 +91,7 @@ void parse_num()
     // tkword_insert(tkstr.data);   //将整型常量加入单词表
     constant_table_insert(tkstr.data);
     tkvalue = atoi(tkstr.data);
+    printf("%s", tkstr.data);
 }
 
 /**
@@ -185,6 +187,7 @@ void parse_string(char sep)
     dynstring_chcat(&sourcestr, '\0');
     // tkword_insert(tkstr.data);   //将字符串常量加入单词表
     constant_table_insert(tkstr.data);
+    printf("%s\"", tkstr.data);
     getch();
 }
 
@@ -460,7 +463,7 @@ void skip_white_space()
             line_num++;
             // getch();
         }
-        // printf("%c", ch);
+        printf("%c", ch);
         getch();
     }
 }
@@ -470,11 +473,12 @@ void skip_white_space()
  * **/
 void parse_comment()
 {
+    printf("AAAAAAAAAAAAAA\n");
     getch();
     do {
         do {
-            if(ch == '\n' || ch == '*' || ch == TK_EOF) {
-            // if(ch == '\n' || ch == '*' || ch == EOF) {
+            // if(ch == '\n' || ch == '*' || ch == TK_EOF) {
+            if(ch == '\n' || ch == '*' || ch == EOF) {
                 break;
             } else {
                 getch();
@@ -568,12 +572,14 @@ void get_token()
         }
         case '+':
         {
+            printf("%c", ch);
             getch();
             token = TK_PLUS;
             break;
         }
         case '-':
         {
+            printf("%c", ch);
             getch();
             if(ch == '>') {
                 token = TK_POINTSTO;
@@ -585,18 +591,21 @@ void get_token()
         }
         case '/':
         {
+            printf("%c", ch);
             getch();
             token = TK_DIVIDE;
             break;
         }
         case '%':
         {
+            printf("%c", ch);
             getch();
             token = TK_MOD;
             break;
         }
         case '=':
         {
+            printf("%c", ch);
             getch();
             if(ch == '=') {
                 token = TK_EQ;
@@ -608,6 +617,7 @@ void get_token()
         }
         case '!':
         {
+            printf("%c", ch);
             getch();
             if(ch == '=') {
                 token = TK_NEQ;
@@ -619,6 +629,7 @@ void get_token()
         }
         case '<':
         {
+            printf("%c", ch);
             getch();
             if(ch == '=') {
                 token = TK_LEQ;
@@ -630,6 +641,7 @@ void get_token()
         }
         case '>':
         {
+            printf("%c", ch);
             getch();
             if(ch == '=') {
                 token = TK_GEQ;
@@ -641,6 +653,7 @@ void get_token()
         }
         case '.':
         {
+            printf("%c", ch);
             getch();
             if(ch == '.') {
                 getch();
@@ -657,66 +670,77 @@ void get_token()
         }
         case '&':
         {
+            printf("%c", ch);
             getch();
             token = TK_AND;
             break;
         }
         case ';':
         {
+            printf("%c", ch);
             getch();
             token = TK_SEMICOLON;
             break;
         }
         case ']':
         {
+            printf("%c", ch);
             getch();
             token = TK_CLOSEBR;
             break;
         }
         case '}':
         {
+            printf("%c", ch);
             getch();
             token = TK_END;
             break;
         }
         case ')':
         {
+            printf("%c", ch);
             getch();
             token = TK_CLOSEPA;
             break;
         }
         case '[':
         {
+            printf("%c", ch);
             getch();
             token = TK_OPENBR;
             break;
         }
         case '{':
         {
+            printf("%c", ch);
             getch();
             token = TK_BEGIN;
             break;
         }
         case ',':
         {
+            printf("%c", ch);
             getch();
             token = TK_COMMA;
             break;
         }
         case '(':
         {
+            printf("%c", ch);
             getch();
             token = TK_OPENPA;
             break;
         }
         case '*':
         {
+            printf("%c", ch);
             getch();
             token = TK_STAR;
             break;
         }
         case '\'':
         {
+            printf("%c", ch);
             parse_string(ch);
             token = TK_CCHAR;
             tkvalue = *(char*)tkstr.data;
@@ -724,6 +748,7 @@ void get_token()
         }
         case '\"':
         {
+            printf("%c", ch);
             parse_string(ch);
             token = TK_CSTR;
             break;
@@ -740,13 +765,14 @@ void get_token()
             break;
         }
     }
+    printf("%c", ch);
 }
 
 /**
  * get_tkstr - 取得单词v所代表的源码字符串，错误提示用
  * @v: 单词编号
  **/
-char *get_tkstr(int v)
+char* get_tkstr(int v)
 {
 	if(v > tktable.count)
 		return NULL;
@@ -765,7 +791,7 @@ void lex()
         get_token();   //取单词
         // print_tktable();
         // tktable_print2file();
-        // fwrite(&ch, 1, 1, fout);
+        // fwrite(&ch, 1, 1, fout)A;
         getch();
     } while(token != TK_EOF);
     tktable_print2file();

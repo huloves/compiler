@@ -17,6 +17,7 @@ int main()
         c = 66;
     }
     printf("Hello World!");
+    scanf("%d\n", a);
     return 0;
 }
 

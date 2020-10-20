@@ -49,6 +49,7 @@
 <47, b>
 <48, c>
 <49, printf>
-<50, _entry>
-<51, ret>
-<52, exit>
+<50, scanf>
+<51, _entry>
+<52, ret>
+<53, exit>
