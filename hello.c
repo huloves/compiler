@@ -8,6 +8,12 @@ struct point
     int y;
 };
 
+struct point2
+{
+    int a;
+    int b;
+};
+
 int main()
 {
     int a = 1 + 3;
