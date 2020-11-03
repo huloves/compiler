@@ -12,6 +12,7 @@ struct point2
 {
     int a;
     int b;
+    int c;
 };
 
 int main()
